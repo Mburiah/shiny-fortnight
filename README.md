@@ -14,7 +14,7 @@ Mburiah.
 4. User can see all users from a specific Department, the news relating to that department or a link to a page with said news. 
 5. The user can post some news relating to a department.
 
-## BDD
+## ENDPOINTS
 
 ## Pre-requisites
 1.You need to have java installed. You can use [sdkman](https://sdkman.io/).
