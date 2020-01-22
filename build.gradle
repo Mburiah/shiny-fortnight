@@ -3,7 +3,7 @@ plugins {
     id 'application'
 }
 
-group 'com.shedroid'
+group 'com.shedroid.newsAPI'
 version '1.0-SNAPSHOT'
 
 sourceCompatibility = 1.8
@@ -17,6 +17,8 @@ dependencies {
     compile "com.sparkjava:spark-core:2.6.0"
     compile 'org.slf4j:slf4j-simple:1.7.21'
     compile 'org.sql2o:sql2o:1.5.4'
-    compile group: 'com.h2database', name: 'h2', version: '1.4.191'
+
     compile 'com.google.code.gson:gson:2.5'
 }
+
+task stage (dependsOn: ['clean', 'installDist'])

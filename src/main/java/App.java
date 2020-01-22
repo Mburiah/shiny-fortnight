@@ -1,11 +1,15 @@
 import dao.Sql2oDepartmentDao;
 import dao.Sql2oEmployeeDao;
 import dao.Sql2oNewsDao;
+import exceptions.ApiException;
 import org.sql2o.Sql2o;
 import org.sql2o.Connection;
 import static spark.Spark.*;
 import com.google.gson.Gson;
 import models.*;
+
+import java.util.HashMap;
+import java.util.Map;
 
 
 public class App {
@@ -16,7 +20,7 @@ public class App {
         Connection conn;
         Gson gson = new Gson();
 
-        String connectionString = "jdbc:h2:~/organisation.db;INIT=RUNSCRIPT from 'classpath:db/create.sql'";
+        String connectionString = "jdbc:postgresql:~/organisational_api.db;INIT=RUNSCRIPT from 'classpath:db/create.sql'";
         Sql2o sql2o = new Sql2o(connectionString, "postgres", "password");
 
         employeeDao = new Sql2oEmployeeDao(sql2o);
@@ -61,7 +65,7 @@ public class App {
             departmentDao.add(department);
             response.status(201);
             return gson.toJson(department);
-        })
+        });
         post("/employees/new", "application/json", (request, response) -> {
             Employee employee = gson.fromJson(request.body(), Employee.class);
             employeeDao.add(employee);
@@ -69,7 +73,24 @@ public class App {
             return gson.toJson(employee);
         });
         post("/news/new", "application/json",(request, response) -> {
-            News news = gson.fromJson(j)
+            News news = gson.fromJson(request.body(),News.class);
+            newsDao.add(news);
+            response.status(201);
+            return  gson.toJson(news);
+        });
+
+        exception(ApiException.class, (exc, req, res) -> {
+            ApiException err = (ApiException) exc;
+            Map<String, Object> jsonMap = new HashMap<>();
+            jsonMap.put("status", err.getStatusCode());
+            jsonMap.put("errorMessage", err.getMessage());
+            res.type("application/json");
+            res.status(err.getStatusCode());
+            res.body(gson.toJson(jsonMap));
+        });
+
+        after((req, res) -> {
+            res.type("application/json");
         });
 
 

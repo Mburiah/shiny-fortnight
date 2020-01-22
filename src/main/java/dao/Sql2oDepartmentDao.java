@@ -29,10 +29,7 @@ public class Sql2oDepartmentDao implements DepartmentDao {
         }
     }
 
-    @Override
-    public void addClassifiedNewsToDepartment(News news, Department department) {
 
-    }
 
 
     @Override
@@ -64,10 +61,10 @@ public class Sql2oDepartmentDao implements DepartmentDao {
             List<Integer> allNewsIds = con.createQuery(joinQuery)
                     .addParameter("department_id",department_id)
                     .executeAndFetch(Integer.class);
-            for(Integer classifiedId :allNewsIds){
-                String classifiedQuery = "SELECT * FROM news WHERE id =:news_id";
+            for(Integer NewsId :allNewsIds){
+                String newsQuery = "SELECT * FROM news WHERE id =:news_id";
                 int newsId = 0;
-                news.add(con.createQuery(classifiedQuery)
+                news.add(con.createQuery(newsQuery)
                         .addParameter("news_id",newsId)
                         .executeAndFetchFirst(News.class));
             }

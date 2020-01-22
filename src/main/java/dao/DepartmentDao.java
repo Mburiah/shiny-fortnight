@@ -10,7 +10,7 @@ public interface DepartmentDao {
 
     void add(Department department);
 
-    void addClassifiedNewsToDepartment(News news , Department department);
+    void addNewsToDepartment(News news , Department department);
 
     List<Department> getDepartments();
 
