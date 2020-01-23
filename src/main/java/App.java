@@ -17,22 +17,22 @@ public class App {
         Sql2oDepartmentDao departmentDao;
         Sql2oEmployeeDao employeeDao;
         Sql2oNewsDao newsDao;
-        Connection conn;
+        Connection connection;
         Gson gson = new Gson();
 
-        String connectionString = "jdbc:postgresql:~/organisational_api.db;INIT=RUNSCRIPT from 'classpath:db/create.sql'";
+        String connectionString = "jdbc:postgresql://localhost:5432/organisational_api";
         Sql2o sql2o = new Sql2o(connectionString, "postgres", "password");
 
         employeeDao = new Sql2oEmployeeDao(sql2o);
         newsDao = new Sql2oNewsDao(sql2o);
         departmentDao = new Sql2oDepartmentDao(sql2o);
-        conn = sql2o.open();
+        connection= sql2o.open();
 
         get("/departments", "application/json", (request, response) -> {
             return gson.toJson(departmentDao.getDepartments());
         });
         get("departments/:id", "application/json", (request, response) -> {
-            int departmentId = Integer.parseInt(request.queryParams("id"));
+            int departmentId = Integer.parseInt(request.params("id"));
             Department departmentToFind = departmentDao.findById(departmentId);
             if (departmentToFind == null) {
                 throw new ApiException(404, String.format("No department with the id:\"%s\" exists", request.queryParams("id")));
@@ -41,22 +41,21 @@ public class App {
         });
 
 
-        get ("employeees", "application/json", (request, response) -> {
+        get ("/employees", "application/json", (request, response) -> {
             return  gson.toJson(employeeDao.getEmployees());
         });
         get("/employees/:id", "application/json", (request, response) -> {
             response.type("/application/json");
-            int employeeId = Integer.parseInt(request.queryParams("id"));
+            int employeeId = Integer.parseInt(request.params("id"));
             return gson.toJson(departmentDao.findById(employeeId));
         });
 
 
         get("/news", "application/json", (request, response) -> {
-            int newsId = Integer.parseInt(request.queryParams("id"));
-            return gson.toJson(newsDao.findById(newsId));
+            return gson.toJson(newsDao.getNews());
         });
         get("/news/:id", "application/json", (request, response) -> {
-            int newsId = Integer.parseInt(request.queryParams("id"));
+            int newsId = Integer.parseInt(request.params("id"));
             return gson.toJson(newsDao.findById(newsId));
         });
 

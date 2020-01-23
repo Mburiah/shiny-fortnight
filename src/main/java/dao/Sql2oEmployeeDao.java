@@ -14,7 +14,7 @@ public class Sql2oEmployeeDao implements EmployeeDao {
 
     @Override
     public void add (Employee  employee){
-        String sql = "INSERT INTO employees(name, position, department_id VALUES(:name, :position, :department_id)";
+        String sql = "INSERT INTO employees(name, title, department_id) VALUES(:name, :title, :department_id)";
         try (Connection connection= sql2o.open()){
             int id = (int) connection.createQuery(sql, true)
                     .bind(employee)
